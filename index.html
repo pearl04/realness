@@ -37,7 +37,7 @@
     box-shadow:0 0 14px rgba(255,77,98,.5);animation:sweep 6.5s linear infinite}
   @keyframes sweep{0%{top:-2%;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:102%;opacity:0}}
   @keyframes breathe{0%,100%{opacity:.55}50%{opacity:1}}
-  @media(max-width:760px){.ambient{display:none}}
+  @media(max-width:760px){.ambient .glow, .ambient .grid{display:none}}  /* phone keeps just the scan line */
   body.green .ambient, body.red .ambient{display:none}
   #app{position:relative;z-index:1;min-height:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;
     padding:max(28px,env(safe-area-inset-top)) 24px max(28px,env(safe-area-inset-bottom))}
