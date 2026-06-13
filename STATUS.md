@@ -10,7 +10,7 @@ A mobile web app that proves **a real, live human is on the other end of a conve
 - App: https://realness.vercel.app/
 - Repo: https://github.com/pearl04/realness (public)
 - Host: Vercel (serverless `api/` + static root) · Store: Upstash Redis
-- Reset data anytime: `curl -X POST "https://realness.vercel.app/api/wipe?confirm=realness"`
+- Reset data anytime: `curl -X POST "https://realness.vercel.app/api/wipe?confirm=$WIPE_TOKEN"` (token lives only in Vercel env, not the repo)
 
 ## Done ✅
 - [x] Live HTTPS deploy loading on a phone (RP ID = realness.vercel.app, exact)
