@@ -30,9 +30,23 @@ export default async function handler(req, res) {
       counter: credential.counter,
       transports: credential.transports || [],
     });
+
+    let completedSession = false;
+    if (rec.sessionId) {
+      const sess = await getJSON(`sess:${rec.sessionId}`);
+      if (sess && sess.status === 'pending') {
+        await setJSON(
+          `sess:${rec.sessionId}`,
+          { ...sess, status: 'verified', verifiedAt: Date.now() },
+          600,
+        );
+        completedSession = true;
+      }
+    }
+
     await del(`chal:reg:${flowId}`);
 
-    return send(res, 200, { verified: true });
+    return send(res, 200, { verified: true, completedSession });
   } catch (e) {
     return send(res, 400, { verified: false, error: e.message });
   }

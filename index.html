@@ -162,12 +162,15 @@ function doneSetup(){
   document.getElementById('home').onclick = home;
 }
 
-async function enroll(){
+async function enroll(sessionId){
   try{
-    const { flowId, options } = await post('/api/setup/options', {});
+    const { flowId, options } = await post('/api/setup/options', sessionId ? { sessionId } : {});
     const att = await WA.startRegistration({ optionsJSON: options });
     const res = await post('/api/setup/verify', { flowId, response: att });
-    if (res.verified){ localStorage.setItem(ENROLL_KEY,'1'); return true; }
+    if (res.verified && (!sessionId || res.completedSession)){
+      localStorage.setItem(ENROLL_KEY,'1');
+      return true;
+    }
     return false;
   }catch(err){ return false; }
 }
@@ -254,16 +257,22 @@ function responder(sessionId){
     <div class="spacer"></div>
     <div class="stack">
       <button class="btn" id="verify">Verify I'm real</button>
-      <button class="link" id="setup">This is my phone — set it up first</button>
     </div>`);
-  document.getElementById('setup').onclick = setupScreen;
   document.getElementById('verify').onclick = async (e)=>{
-    e.target.disabled = true; e.target.textContent = 'Waiting for biometric…';
+    e.target.disabled = true;
     try{
-      const { options } = await post('/api/handshake/options', { sessionId });
-      const asse = await WA.startAuthentication({ optionsJSON: options });
-      const res = await post('/api/handshake/verify', { sessionId, response: asse });
-      if (res.verified){ buzz(30); responderDone(true); }
+      let ok = false;
+      if (isEnrolled()) {
+        e.target.textContent = 'Waiting for biometric...';
+        const { options } = await post('/api/handshake/options', { sessionId });
+        const asse = await WA.startAuthentication({ optionsJSON: options });
+        const res = await post('/api/handshake/verify', { sessionId, response: asse });
+        ok = Boolean(res.verified);
+      } else {
+        e.target.textContent = 'Waiting for biometric...';
+        ok = await enroll(sessionId);
+      }
+      if (ok){ buzz(30); responderDone(true); }
       else { await post('/api/handshake/fail', { sessionId }); responderDone(false); }
     }catch(err){
       await post('/api/handshake/fail', { sessionId });

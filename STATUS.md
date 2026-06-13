@@ -18,6 +18,7 @@ A mobile web app that proves **a real, live human is on the other end of a conve
 - [x] Handshake: requester session + responder live auth ceremony + polling (`api/session/*`, `api/handshake/*`)
 - [x] Fresh server-issued challenge per ceremony (anti-replay)
 - [x] Platform authenticator + user-verification forced; discoverable passkeys
+- [x] First-time responder phones enroll inline during the handshake, so there is no visible "set it up first" detour
 - [x] Designed GREEN bloom + RED states (no raw browser errors)
 - [x] QR + copy-link to send a handshake
 - [x] Felt UI: Aurora Bloom dark theme, green bloom transition, Face ID line glyph, verified timestamp
@@ -26,18 +27,17 @@ A mobile web app that proves **a real, live human is on the other end of a conve
 - [x] Public repo, clean git history (noreply identity, no secrets)
 
 ## Left to do ⬜
-- [ ] **Real two-phone biometric run** (the only path untestable without devices) — enroll on phone A, request on phone B, confirm GREEN bloom; cancel biometric → RED
+- [ ] **Real two-phone biometric run** (the only path untestable without devices) — request on laptop/phone A, scan on phone B, tap once, confirm GREEN bloom; cancel biometric → RED
 - [ ] Tune bloom intensity / copy / timing after seeing it on a real device
 - [ ] Rehearse the ~80-second demo
 - [ ] Optional: confirm PWA "Add to Home Screen" on iOS + Android
 
 ## Demo choreography (~80s)
-1. Judge's phone → open URL → **Become verifiable** → Face ID (one time, ~10s)
-2. Your phone → **Request a handshake** → QR appears
-3. Judge scans QR → **Verify I'm real** → their Face ID
-4. Your phone blooms **GREEN** — "Verified human · VERIFIED hh:mm:ss" (the hero moment)
-5. Un-set-up phone scans a fresh handshake → tap Verify → **cancel the prompt** → RED
-6. Line: "Completes = real human. Doesn't = you've been warned. We don't detect fakes — we prove what's real."
+1. Your laptop/phone → **Request a handshake** → QR appears
+2. Judge scans QR → **Verify I'm real** → their Face ID
+3. Your laptop/phone blooms **GREEN** — "Verified human · VERIFIED hh:mm:ss" (the hero moment)
+4. Fresh handshake → judge scans again → **cancel the biometric prompt** → RED
+5. Line: "Completes = real human. Doesn't = you've been warned. We don't detect fakes — we prove what's real."
 
 ## Gotchas (read before the room)
 - Use `realness.vercel.app` EXACTLY on every phone — passkeys bind to the domain; preview URLs won't find enrollments.
