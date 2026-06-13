@@ -74,6 +74,6 @@ function png(size) {
   const sig = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
   return Buffer.concat([sig, chunk('IHDR', ihdr), chunk('IDAT', deflateSync(raw)), chunk('IEND', Buffer.alloc(0))]);
 }
-writeFileSync('public/icon-192.png', png(192));
-writeFileSync('public/icon-512.png', png(512));
+writeFileSync('icon-192.png', png(192));
+writeFileSync('icon-512.png', png(512));
 console.log('icons written');
