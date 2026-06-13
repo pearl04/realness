@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#07090d">
+<title>Realness story — when everything looks real</title>
+<style>
+  :root{
+    --bg:#07090d; --panel:#10131a; --panel2:#171b24; --ink:#f7f8fb; --muted:#9ca3b4;
+    --line:#2a3040; --green:#22e08a; --red:#ff4d62; --blue:#6ea8ff; --gold:#f6c35f;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{min-height:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,system-ui,sans-serif}
+  body.light{background:#f3f5f9;color:#111827}
+  button,a{font:inherit}
+  a{color:inherit}
+  .shell{min-height:100vh;display:flex;flex-direction:column}
+  .bar{height:58px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 22px;background:rgba(7,9,13,.92);position:sticky;top:0;z-index:4;backdrop-filter:blur(14px)}
+  .brand{letter-spacing:.32em;text-transform:uppercase;font-size:13px;color:var(--muted)}
+  .nav{display:flex;gap:8px;align-items:center}
+  .nav button,.ghost{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:8px;padding:9px 12px;cursor:pointer}
+  .nav button:disabled{opacity:.35;cursor:default}
+  main{width:min(1120px,100%);margin:0 auto;padding:32px 22px 44px;flex:1}
+  .grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:24px;align-items:start}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:22px}
+  .headline{font-size:42px;line-height:1.02;letter-spacing:0;margin:0 0 12px;font-weight:760}
+  .sub{color:var(--muted);font-size:17px;line-height:1.5;margin:0}
+  .tiny{font-size:12.5px;line-height:1.45;color:var(--muted)}
+  .message{background:#f8fafc;color:#101828;border:1px solid #d8dee9;border-radius:8px;overflow:hidden}
+  .messageTop{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;border-bottom:1px solid #e4e8f0;background:#fff}
+  .linkedin{display:flex;align-items:center;gap:10px;color:#0a66c2;font-weight:760}
+  .linkedIcon{width:28px;height:28px;border-radius:6px;background:#0a66c2;color:#fff;display:grid;place-items:center;font-weight:800}
+  .thread{padding:18px}
+  .profile{display:flex;gap:13px;align-items:center;margin-bottom:14px}
+  .photo{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;overflow:hidden;background:linear-gradient(140deg,#dff3ff,#c7f8d8 52%,#8fa2ff);color:#142033;font-weight:800;position:relative}
+  .photo:after{content:"";position:absolute;left:16px;top:13px;width:21px;height:21px;border-radius:50%;background:rgba(36,44,66,.72);box-shadow:0 23px 0 8px rgba(36,44,66,.72)}
+  .who{font-weight:740;color:#111827}
+  .role{font-size:13px;color:#667085;margin-top:3px}
+  .bubble{background:#fff;border:1px solid #e2e7f0;border-radius:8px;padding:15px;font-size:15px;line-height:1.48}
+  .bubble p{margin:0}
+  .bubble p+p{margin-top:12px}
+  .actions{display:flex;gap:10px;margin-top:16px}
+  .primary{border:0;background:var(--ink);color:#05070b;border-radius:8px;padding:13px 16px;font-weight:720;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+  .primary.blue{background:#0a66c2;color:#fff}
+  .primary.green{background:var(--green);color:#041109}
+  .primary.red{background:var(--red);color:#230307}
+  .primary:active,.ghost:active,.evidence:active{transform:scale(.99)}
+  .evidenceGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:20px}
+  .evidence{border:1px solid var(--line);background:var(--panel2);border-radius:8px;padding:15px;text-align:left;color:var(--ink);cursor:pointer;min-height:124px}
+  .evidence b{display:block;margin:0 0 8px;font-size:15px}
+  .evidence span{display:block;color:var(--muted);font-size:13px;line-height:1.38}
+  .stamp{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:8px 11px;color:var(--muted);font-size:13px;margin-bottom:18px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 16px rgba(34,224,138,.75)}
+  .dot.red{background:var(--red);box-shadow:0 0 16px rgba(255,77,98,.65)}
+  .signals{display:flex;flex-direction:column;gap:10px}
+  .signal{display:flex;align-items:flex-start;gap:10px;border-bottom:1px solid var(--line);padding-bottom:10px}
+  .signal:last-child{border-bottom:0;padding-bottom:0}
+  .tick{width:22px;height:22px;border-radius:50%;background:#11251c;color:#75ffc0;display:grid;place-items:center;flex:0 0 auto;font-size:13px}
+  .trustScore{border:1px solid rgba(34,224,138,.38);background:rgba(34,224,138,.08);border-radius:8px;padding:15px;margin-top:14px}
+  .scoreNum{font-size:36px;font-weight:780;color:#76ffc1}
+  .pageView{display:none}
+  .pageView.active{display:block;animation:rise .25s ease}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .browser{background:#fff;color:#111827;border:1px solid #d9deea;border-radius:8px;overflow:hidden}
+  .chrome{height:46px;background:#eef1f6;border-bottom:1px solid #d9deea;display:flex;align-items:center;gap:8px;padding:0 13px}
+  .orb{width:10px;height:10px;border-radius:50%;background:#cbd2df}
+  .url{flex:1;background:#fff;border:1px solid #d9deea;border-radius:999px;padding:7px 12px;font-size:13px;color:#697386}
+  .browserBody{padding:22px}
+  .profileHero{display:flex;gap:16px;align-items:center;border-bottom:1px solid #e4e8f0;padding-bottom:18px;margin-bottom:18px}
+  .bigPhoto{width:84px;height:84px;border-radius:50%;background:linear-gradient(140deg,#dff3ff,#c7f8d8 52%,#8fa2ff);position:relative;overflow:hidden}
+  .bigPhoto:after{content:"";position:absolute;left:24px;top:18px;width:34px;height:34px;border-radius:50%;background:rgba(36,44,66,.72);box-shadow:0 39px 0 13px rgba(36,44,66,.72)}
+  .browser h2{font-size:25px;margin:0 0 5px}
+  .browser h3{font-size:17px;margin:20px 0 10px}
+  .browser p,.browser li{color:#475467;line-height:1.45}
+  .pill{display:inline-flex;border:1px solid #d9deea;background:#f7f9fc;border-radius:999px;padding:6px 10px;font-size:12.5px;color:#475467;margin:4px 5px 0 0}
+  .searchBox{border:1px solid #d9deea;border-radius:999px;padding:13px 18px;color:#111827;font-size:17px;margin-bottom:18px}
+  .result{border-bottom:1px solid #e4e8f0;padding:16px 0}
+  .result:last-child{border-bottom:0}
+  .result a{color:#1a0dab;font-size:18px;text-decoration:none}
+  .result .path{color:#0b7f47;font-size:13px;margin:3px 0}
+  .companyHero{background:linear-gradient(120deg,#0e1625,#1a3d5c);color:#fff;padding:28px;border-radius:8px;margin-bottom:20px}
+  .companyHero p{color:#d9e7ff}
+  .mutuals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .mutual{border:1px solid #e2e7f0;border-radius:8px;padding:13px;display:flex;gap:10px;align-items:center}
+  .miniPhoto{width:36px;height:36px;border-radius:50%;background:linear-gradient(140deg,#ffe5b8,#b5d6ff);position:relative;overflow:hidden;flex:0 0 auto}
+  .miniPhoto:after{content:"";position:absolute;left:11px;top:9px;width:14px;height:14px;border-radius:50%;background:#667085;box-shadow:0 17px 0 6px #667085}
+  .twist{min-height:calc(100vh - 160px);display:grid;place-items:center;text-align:center}
+  .twistBox{width:min(760px,100%);padding:24px}
+  .twist h1{font-size:54px;line-height:1;margin:0 0 18px}
+  .fakeList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:24px 0;text-align:left}
+  .fakeList div{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:14px;color:var(--muted)}
+  .demoSplit{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+  .demoCard{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:18px;min-height:228px;display:flex;flex-direction:column;justify-content:space-between}
+  .demoCard.pass{border-color:rgba(34,224,138,.42);background:rgba(34,224,138,.08)}
+  .demoCard.fail{border-color:rgba(255,77,98,.42);background:rgba(255,77,98,.08)}
+  .seal{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-size:28px;font-weight:780}
+  .pass .seal{background:var(--green);color:#031009;box-shadow:0 0 36px rgba(34,224,138,.45)}
+  .fail .seal{background:var(--red);color:#240205;box-shadow:0 0 36px rgba(255,77,98,.38)}
+  .footerNote{margin-top:18px;color:var(--muted);font-size:13px;line-height:1.45}
+  @media(max-width:860px){
+    .grid,.demoSplit{grid-template-columns:1fr}
+    .headline{font-size:35px}
+    .evidenceGrid,.fakeList,.mutuals{grid-template-columns:1fr}
+    main{padding:22px 16px 34px}
+    .bar{padding:0 16px}
+    .nav button{padding:8px 10px}
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="bar">
+    <div class="brand">Realness</div>
+    <div class="nav">
+      <button id="back">Back</button>
+      <button id="home">Story</button>
+      <a class="ghost" href="/">Open app</a>
+    </div>
+  </div>
+  <main id="app"></main>
+</div>
+<script>
+const app = document.getElementById('app');
+const back = document.getElementById('back');
+const homeBtn = document.getElementById('home');
+const historyStack = [];
+
+const pages = {
+  linkedin: {
+    title: 'LinkedIn profile',
+    url: 'linkedin.com/in/maya-sen-trust',
+    body: `
+      <div class="profileHero">
+        <div class="bigPhoto"></div>
+        <div>
+          <h2>Maya Sen</h2>
+          <p>Partnerships Lead at Northstar Ventures · Trust, identity, and security infrastructure</p>
+          <span class="pill">2nd degree</span><span class="pill">18 mutual connections</span><span class="pill">Posts weekly</span>
+        </div>
+      </div>
+      <h3>About</h3>
+      <p>I work with founders building trust infrastructure for the AI-native internet: identity, fraud prevention, human verification, and agent safety.</p>
+      <h3>Recent activity</h3>
+      <p><b>Posted 2 days ago:</b> The next consumer security primitive will not be another password. It will be proof that a real person is present when trust matters.</p>
+      <h3>Experience</h3>
+      <p><b>Northstar Ventures</b> · Partnerships Lead · 2022-present</p>
+      <p><b>Clearcall Security</b> · GTM advisor · 2020-2022</p>`
+  },
+  company: {
+    title: 'Company website',
+    url: 'northstarventures.co/team/maya-sen',
+    body: `
+      <div class="companyHero">
+        <h2>Northstar Ventures</h2>
+        <p>Backing trust, security, and identity companies for the AI-native internet.</p>
+      </div>
+      <h3>Team</h3>
+      <p><b>Maya Sen</b> leads founder partnerships across trust, consumer safety, and applied identity. She works with early teams turning security into consumer-grade products.</p>
+      <h3>Portfolio signals</h3>
+      <span class="pill">Identity wallets</span><span class="pill">Fraud prevention</span><span class="pill">Passkey infrastructure</span><span class="pill">Agent security</span>
+      <h3>Contact</h3>
+      <p>maya@northstarventures.co · London / New York</p>`
+  },
+  google: {
+    title: 'Google results',
+    url: 'google.com/search?q=Maya+Sen+Northstar+Ventures',
+    body: `
+      <div class="searchBox">Maya Sen Northstar Ventures realness identity</div>
+      <div class="result">
+        <a>Maya Sen - Northstar Ventures</a>
+        <div class="path">northstarventures.co/team/maya-sen</div>
+        <p>Partnerships Lead focused on trust infrastructure, identity, consumer security, and AI-native fraud prevention.</p>
+      </div>
+      <div class="result">
+        <a>Panel: The Future of Human Trust Online</a>
+        <div class="path">trustweek.io/speakers/maya-sen</div>
+        <p>Maya Sen joins founders and security leaders to discuss proof of humanity in the agentic web.</p>
+      </div>
+      <div class="result">
+        <a>Northstar Ventures backs consumer identity startup</a>
+        <div class="path">ventureledger.com/northstar-identity-seed</div>
+        <p>Northstar's Maya Sen says social proof is collapsing as synthetic profiles become cheap to manufacture.</p>
+      </div>`
+  },
+  mutuals: {
+    title: 'Mutual connections',
+    url: 'linkedin.com/search/results/people/?connectionOf=maya-sen',
+    body: `
+      <h2>18 mutual connections</h2>
+      <p>These look like familiar people and communities. That makes the request feel safer.</p>
+      <div class="mutuals">
+        <div class="mutual"><div class="miniPhoto"></div><div><b>Ari Mehta</b><p>Founder, consumer AI</p></div></div>
+        <div class="mutual"><div class="miniPhoto"></div><div><b>Leah Grant</b><p>Product lead, identity</p></div></div>
+        <div class="mutual"><div class="miniPhoto"></div><div><b>Samir Rao</b><p>Angel investor</p></div></div>
+        <div class="mutual"><div class="miniPhoto"></div><div><b>Nina Park</b><p>Security researcher</p></div></div>
+      </div>`
+  },
+  domain: {
+    title: 'Domain and email check',
+    url: 'mailcheck.example/report/northstarventures.co',
+    body: `
+      <h2>maya@northstarventures.co</h2>
+      <p>The domain passes the usual surface checks.</p>
+      <p><span class="pill">SPF present</span><span class="pill">DKIM present</span><span class="pill">DMARC quarantine</span><span class="pill">No obvious blacklist hit</span></p>
+      <h3>Why this still is not enough</h3>
+      <p>A good-looking domain can be bought, warmed up, redirected, cloned, or impersonated. The email can be plausible and still not prove that a live human is behind the request right now.</p>`
+  }
+};
+
+function setRoute(route, push=true){
+  if (push) historyStack.push(route);
+  document.body.className = route.startsWith('page:') ? 'light' : '';
+  back.disabled = historyStack.length <= 1;
+  if (route === 'story') return renderStory();
+  if (route === 'twist') return renderTwist();
+  if (route === 'bridge') return renderBridge();
+  if (route.startsWith('page:')) return renderEvidence(route.slice(5));
+}
+
+function renderStory(){
+  app.innerHTML = `
+    <div class="grid">
+      <section>
+        <div class="stamp"><span class="dot"></span>Inbound message · looks legitimate</div>
+        <h1 class="headline">The scam does not look like a scam anymore.</h1>
+        <p class="sub">A credible person reaches out. The profile, website, search results, and mutuals all check out. In an AI world, that is no longer enough.</p>
+        <div class="evidenceGrid">
+          <button class="evidence" data-page="linkedin"><b>LinkedIn profile</b><span>Role, posts, mutual connections, work history.</span></button>
+          <button class="evidence" data-page="company"><b>Company website</b><span>A polished firm page with Maya on the team.</span></button>
+          <button class="evidence" data-page="google"><b>Google presence</b><span>Search results, articles, speaker page, snippets.</span></button>
+          <button class="evidence" data-page="mutuals"><b>Mutuals</b><span>Shared network makes the request feel safer.</span></button>
+          <button class="evidence" data-page="domain"><b>Email and domain</b><span>The domain passes ordinary surface checks.</span></button>
+          <button class="evidence" id="twist"><b>So what is missing?</b><span>The one signal synthetic profiles cannot fake as easily.</span></button>
+        </div>
+      </section>
+      <aside class="message">
+        <div class="messageTop">
+          <div class="linkedin"><span class="linkedIcon">in</span> LinkedIn</div>
+          <span class="tiny">Today · 9:42 AM</span>
+        </div>
+        <div class="thread">
+          <div class="profile">
+            <div class="photo"></div>
+            <div>
+              <div class="who">Maya Sen</div>
+              <div class="role">Partnerships Lead · Northstar Ventures</div>
+            </div>
+          </div>
+          <div class="bubble">
+            <p>Hi Pearl, I saw Realness and your hackathon work around proving live human presence. The angle feels unusually timely.</p>
+            <p>I lead partnerships at Northstar Ventures, where we have backed two trust and identity companies. We are meeting founders building fraud-resistant consumer infrastructure for the AI-native internet.</p>
+            <p>Would you be open to a 12-minute call today? I think there may be a fit.</p>
+          </div>
+          <div class="actions">
+            <button class="primary blue" id="inspect">Inspect signals</button>
+          </div>
+        </div>
+      </aside>
+    </div>`;
+  app.querySelectorAll('[data-page]').forEach(btn => btn.onclick = () => setRoute('page:' + btn.dataset.page));
+  app.querySelector('#twist').onclick = () => setRoute('twist');
+  app.querySelector('#inspect').onclick = () => setRoute('page:linkedin');
+}
+
+function renderEvidence(key){
+  const p = pages[key];
+  app.innerHTML = `
+    <div class="browser">
+      <div class="chrome"><span class="orb"></span><span class="orb"></span><span class="orb"></span><div class="url">https://${p.url}</div></div>
+      <div class="browserBody">
+        ${p.body}
+        <div class="actions">
+          <button class="primary blue" id="next">Back to evidence</button>
+          <button class="ghost" id="twist">Everything checks out. Now what?</button>
+        </div>
+      </div>
+    </div>`;
+  app.querySelector('#next').onclick = () => setRoute('story');
+  app.querySelector('#twist').onclick = () => setRoute('twist');
+}
+
+function renderTwist(){
+  app.innerHTML = `
+    <section class="twist">
+      <div class="twistBox">
+        <div class="stamp"><span class="dot red"></span>Everything checked out</div>
+        <h1>That is the problem.</h1>
+        <p class="sub">Profiles can be generated. Websites can be cloned. Search results can be seeded. Mutuals can be scraped. Voice and video can be faked.</p>
+        <div class="fakeList">
+          <div>LinkedIn profile: convincing</div>
+          <div>Company website: polished</div>
+          <div>Google presence: plausible</div>
+          <div>Human presence: still unproven</div>
+        </div>
+        <button class="primary green" id="bridge">Ask for live human proof</button>
+      </div>
+    </section>`;
+  app.querySelector('#bridge').onclick = () => setRoute('bridge');
+}
+
+function renderBridge(){
+  app.innerHTML = `
+    <section>
+      <div class="stamp"><span class="dot"></span>Now use the real Realness app</div>
+      <h1 class="headline">Before trusting the profile, ask for proof that a live human is there.</h1>
+      <p class="sub">Run two separate Realness checks. One judge completes the phone biometric to show the pass case. A second judge cancels or does not complete it to show the fail case.</p>
+      <div class="demoSplit">
+        <div class="demoCard pass">
+          <div>
+            <div class="seal">✓</div>
+            <h2>Pass case</h2>
+            <p class="tiny">Generate QR #1. Judge A scans it and completes Face ID. Your laptop turns green: live human confirmed.</p>
+          </div>
+          <a class="primary green" href="/" target="_blank" rel="noopener">Run live pass check</a>
+        </div>
+        <div class="demoCard fail">
+          <div>
+            <div class="seal">×</div>
+            <h2>Fail case</h2>
+            <p class="tiny">Generate QR #2. Judge B scans it, then cancels the biometric or lets it time out. Your laptop turns red: no live human proof.</p>
+          </div>
+          <a class="primary red" href="/" target="_blank" rel="noopener">Run live fail check</a>
+        </div>
+      </div>
+      <p class="footerNote">Narration: The online evidence can look identical. The difference is whether someone can complete a live, device-backed human proof right now.</p>
+    </section>`;
+}
+
+back.onclick = () => {
+  if (historyStack.length <= 1) return;
+  historyStack.pop();
+  setRoute(historyStack.pop() || 'story');
+};
+homeBtn.onclick = () => setRoute('story');
+setRoute('story');
+</script>
+</body>
+</html>
