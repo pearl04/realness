@@ -24,6 +24,21 @@
      radial-gradient(80% 60% at 50% 30%, rgba(11,107,69,.5), transparent 60%), #02060a}
   body.red{background:radial-gradient(120% 90% at 50% 60%, rgba(255,77,98,.28), transparent 62%),
      radial-gradient(70% 50% at 50% 28%, rgba(94,15,28,.55), transparent 60%), #0a0305}
+
+  /* ambient threat field — desktop/projector gutters only; hidden on phones + result screens */
+  .ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .ambient .grid{position:absolute;inset:0;
+    background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+    background-size:46px 46px;-webkit-mask:radial-gradient(circle at 50% 50%,transparent 26%,#000 74%);mask:radial-gradient(circle at 50% 50%,transparent 26%,#000 74%)}
+  .ambient .glow{position:absolute;top:50%;width:42vw;height:80vh;transform:translateY(-50%);border-radius:50%;filter:blur(45px);animation:breathe 7s ease-in-out infinite}
+  .ambient .glow.l{left:-24vw;background:radial-gradient(circle,rgba(255,77,98,.30),transparent 62%)}
+  .ambient .glow.r{right:-24vw;background:radial-gradient(circle,rgba(255,77,98,.26),transparent 62%);animation-delay:1.6s}
+  .ambient .scan{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(255,90,110,.7),transparent);
+    box-shadow:0 0 14px rgba(255,77,98,.5);animation:sweep 6.5s linear infinite}
+  @keyframes sweep{0%{top:-2%;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:102%;opacity:0}}
+  @keyframes breathe{0%,100%{opacity:.55}50%{opacity:1}}
+  @media(max-width:760px){.ambient{display:none}}
+  body.green .ambient, body.red .ambient{display:none}
   #app{position:relative;z-index:1;min-height:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;
     padding:max(28px,env(safe-area-inset-top)) 24px max(28px,env(safe-area-inset-bottom))}
   .bloomwave{position:fixed;left:50%;top:50%;width:40px;height:40px;border-radius:50%;
@@ -93,6 +108,11 @@
 </style>
 </head>
 <body>
+<div class="ambient" aria-hidden="true">
+  <div class="grid"></div>
+  <div class="glow l"></div><div class="glow r"></div>
+  <div class="scan"></div>
+</div>
 <div id="app"></div>
 
 <script src="/vendor/simplewebauthn-browser.umd.min.js"></script>
