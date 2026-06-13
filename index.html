@@ -159,9 +159,12 @@ function home(){
     <div class="stack">
       <button class="btn" id="req">Request a handshake</button>
       <button class="btn ghost" id="setup">${isEnrolled()?'Re-run setup':'Become verifiable'}</button>
-    </div>`);
+    </div>
+    ${isEnrolled()?'<button class="link" id="reset">Reset this device</button>':''}`);
   document.getElementById('req').onclick = startRequest;
   document.getElementById('setup').onclick = setupScreen;
+  const rst = document.getElementById('reset');
+  if (rst) rst.onclick = () => { localStorage.removeItem(ENROLL_KEY); home(); };
 }
 
 function setupScreen(){
