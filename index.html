@@ -51,6 +51,15 @@
   .pill.ok .dot{background:var(--green)}
   .center{text-align:center}
 
+  .steps{margin:6px 0}
+  .step{display:flex;gap:13px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--line)}
+  .step:last-child{border-bottom:0}
+  .num{width:27px;height:27px;border-radius:50%;flex:0 0 auto;display:grid;place-items:center;font-size:13px;font-weight:700;
+    background:#12141d;border:1px solid #2a2f42;color:#cfe9ff}
+  .step.g .num{background:#0c1a14;border-color:#1d4d38;color:#7dffc0}
+  .step p{margin:0;font-size:14.5px;line-height:1.42;color:#cdd2e4}
+  .step .gn{color:#7dffc0}
+
   .fingerprint{width:84px;height:84px;border-radius:50%;display:flex;align-items:center;justify-content:center;
     background:linear-gradient(160deg,#1a1d29,#0c0e16);border:1px solid #262a3a;font-size:38px;margin:0 auto 20px}
 
@@ -118,6 +127,12 @@ function home(){
     <div class="brand fade">Realness</div>
     <h1 class="fade">Prove a real human is on the other end.</h1>
     <p class="sub fade">Right now — even 1,000 miles away. No face, no voice. A proof only a live person can give.</p>
+    <div class="spacer"></div>
+    <div class="steps fade">
+      <div class="step"><div class="num">1</div><p>Send a one-time link or QR.</p></div>
+      <div class="step"><div class="num">2</div><p>They tap Face&nbsp;ID on their own phone — it never leaves the device.</p></div>
+      <div class="step g"><div class="num">3</div><p>Your screen blooms <span class="gn">green</span> — a real, live human, right now.</p></div>
+    </div>
     <div class="spacer"></div>
     <span class="pill ${isEnrolled()?'ok':''}"><span class="dot"></span>${isEnrolled()?'This device · verifiable':'This device · not yet verifiable'}</span>
     <div style="height:14px"></div>
