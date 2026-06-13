@@ -1,0 +1,11 @@
+{
+  "name": "realness",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Prove a real, live human is on the other end — right now.",
+  "dependencies": {
+    "@simplewebauthn/server": "^13.1.1",
+    "@upstash/redis": "^1.34.3"
+  }
+}
